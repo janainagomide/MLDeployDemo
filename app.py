@@ -1,14 +1,18 @@
 import streamlit as st
 from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
-import pandas as pd
 import numpy as np
-import joblib
 
 # Carregar o dataset Iris
 data = load_iris()
+X = data.data
+y = data.target
 
-# Criar a aplicação Streamlit
+# Treinar o modelo diretamente no app
+modelo = RandomForestClassifier()
+modelo.fit(X, y)
+
+# Interface do usuário
 st.title('Classificação de Flores - Dataset Iris')
 
 # Inputs do usuário
@@ -20,12 +24,9 @@ largura_petala = st.slider('Largura da Pétala (cm)', 0.1, 2.5, 1.0)
 # Preparar os dados de entrada
 entrada = np.array([[comprimento_sepala, largura_sepala, comprimento_petala, largura_petala]])
 
-# Carregar o modelo salvo
-modelo_carregado = joblib.load('iris_model.pkl')
-
 # Fazer a previsão
 if st.button('Classificar'):
-    previsao = modelo_carregado.predict(entrada)
+    previsao = modelo.predict(entrada)
     especie = data.target_names[previsao[0]]
     st.write(f'A flor prevista é da espécie: **{especie}**')
 
